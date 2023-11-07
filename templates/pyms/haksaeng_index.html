@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+ table{ border-collapse : collapse; }  /*이중선 제거*/
+ th,td{
+      width: 300px;
+      height: 50px;
+      text-align: center;
+      border: 1px solid #000;
+
+    }
+  </style>
+</head>
+<body>
+    <div>학생커뮤니티</div>
+    <table>
+        <tr>
+            <th>{{ school }}</th>
+        </tr>
+        <tr>
+            <th>{{ date }}</th>
+        </tr>
+        <tr>
+            <th>
+                {% for menu in list %}
+                    {{ menu }}<br>
+                {% endfor %}
+            </th>
+        </tr>
+    </table>
+
+</body>
+</html>
