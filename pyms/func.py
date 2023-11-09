@@ -9,23 +9,21 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 def getGupsik(school):
     return requests.get(f'http://52.79.217.253:5000/menu/{school}').text.split()
 
-# def getGupsik(school):
-#     if school == "선린인터넷고등학교":
-#         page = requests.get("https://sunrint.sen.hs.kr/index.do",  verify=False)
-#         soup = BeautifulSoup(page.text, "html.parser")
-#
-#         element = soup.select(
-#             '#index_board_mlsv_03_195699 > div > div > div > div > ul:nth-child(1) > li > dl > dd > p.menu')
-#
-#         result = str(element).replace(' ', '').replace('   ', '')
-#
-#         result = result[result.find(">") + 1:result.rfind("<")]
-#
-#         result = result[13:-22]
-#         result = re.sub("[0-9]+\.", "", result)
-#
-#         if result == '':
-#             return False
-#         return result
-#     else:
-#         return "개발중"
+
+def getSchedule(school, grade, cls):
+    return requests.get(f'http://52.79.217.253:5000/schedule/{school}/{grade}/{cls}', verify=False).text
+
+
+def shortschool(school_name):
+    if school_name[-4:] == "초등학교" or school_name[-4:] == "고등학교":
+        return school_name[:-4]
+    elif school_name[-3:] == "중학교":
+        return school_name[:-3]
+    elif school_name[-1] == "초" or school_name[-1] == "중" or school_name[-1] == "고":
+        return school_name[:-1]
+    else:
+        return school_name
+
+
+# 초등학교, 중학교, 고등학교
+# 초, 중, 고
