@@ -1,0 +1,35 @@
+.user-actions {
+    margin-bottom: 10px;
+}
+
+.user-info {
+    text-decoration: none;
+    color: #333;
+}
+
+.community-header {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.info-table,
+.schedule-table {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.notion,
+.schedule {
+    text-align: left;
+    padding: 10px;
+}

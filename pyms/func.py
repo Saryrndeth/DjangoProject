@@ -25,5 +25,7 @@ def shortschool(school_name):
         return school_name
 
 
+
+
 # 초등학교, 중학교, 고등학교
 # 초, 중, 고

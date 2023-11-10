@@ -14,15 +14,17 @@ def index(request):
 
 def ajax_request_menu(request):
     if request.method == "POST":
-        for i in RegisteredSchool.objects.all():
-            print(i.school)
+        print(request.POST)
         school = request.POST['school']
         if school == '':
             return JsonResponse({'menu': ''
                 , 'school': '로그인해주세요!', 'date': '', 'schedule': ''})
         try:
-            schedule = [i[0] for i in School(shortschool(school))[int(request.POST['grade'])][int(request.POST['cls'])][datetime.today().weekday()]]
-        except:
+            schedule: list = School(shortschool(school))[int(request.POST['grade'])][int(request.POST['cls'])][datetime.today().weekday()]
+            # shortschedule = lambda x: [i[0] for i in x]
+            schedule = [i[0] for i in schedule]
+        except Exception as e:
+            print(e)
             schedule = getSchedule(school, request.POST['grade'], request.POST['cls'])
         return JsonResponse(({'menu': getGupsik(school)
             , 'school': school, 'date': timezone.now().strftime("%m월%d일"), 'schedule': schedule}))

@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class User(AbstractUser):
-    nickname = models.CharField(max_length=100, default="", null=True)
+    nickname = models.CharField(max_length=100)
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
     Class = models.IntegerField(default=0)

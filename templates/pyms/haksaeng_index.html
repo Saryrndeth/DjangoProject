@@ -1,46 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
- table{ border-collapse : collapse; }  /*이중선 제거*/
- th,td{
-      width: 300px;
-      height: 50px;
-      text-align: center;
-      border: 1px solid #000;
-
-    }
-  </style>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-</head>
-<body>
-    {% if not user.is_authenticated %}
-        <a href="{% url 'login:login' %}">로그인</a>
-        <a href="{% url 'login:signup' %}">회원가입</a>
-    {% else %}
-        <a href="{% url 'login:logout' %}">{{ user.nickname }}({{ user.School }})(로그아웃)</a>
-    {% endif %}
-    <div>학생커뮤니티</div>
-    <table>
-        <tr>
-            <th class="school">로딩중...</th>
-        </tr>
-        <tr>
-            <th class="date">로딩중...</th>
-        </tr>
-        <tr>
-            <th class="menu">
-                로딩중...
-            </th>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <th class="schedule">로딩중...</th>
-        </tr>
-    </table>
+{% extends 'base.html' %}
+{% block content %}
+    <div class="user-actions">
+        {% if not user.is_authenticated %}
+            <a href="{% url 'login:login' %}">로그인</a>
+            <a href="{% url 'login:signup' %}">회원가입</a>
+        {% else %}
+            <a href="{% url 'login:logout' %}" class="user-info">{{ user.nickname }}({{ user.School }})(로그아웃)</a>
+        {% endif %}
+    </div>
+    <div class="community-header">학생커뮤니티</div>
+    <div class="info-table">
+        <table>
+            <tr>
+                <th class="school">로딩중...</th>
+                <th class="date">로딩중...</th>
+                <th class="menu">로딩중...</th>
+            </tr>
+        </table>
+    </div>
+    <div class="schedule-table">
+        <table style="width: 200px">
+            <tr>
+                <th class="notion">로딩중...</th>
+            </tr>
+            <tr>
+                <th class="schedule">로딩중...</th>
+            </tr>
+        </table>
+    </div>
     <script>
         $(document).ready(function() {
             $.ajax({
@@ -55,17 +42,22 @@
                     'X-CSRFTOKEN': '{{ csrf_token }}'
                 },
                 success: function(response) {
-                    document.getElementsByClassName('school')[0].innerHTML = response.school
-                    document.getElementsByClassName('date')[0].innerHTML = response.date;
-                    document.getElementsByClassName('menu')[0].innerHTML = response.menu.toString().replaceAll(',', '<br>');
-                    console.log(response.schedule)
+                    $('.school').text(response.school);
+                    $('.date').text(response.date);
+                    $('.menu').html(response.menu.join('<br>'));
+
+                    console.log(response.schedule);
                     {% if user.is_authenticated %}
-                    document.getElementsByClassName('schedule')[0].innerHTML = "{{ user.Grade }}학년 {{ user.Class }}반 시간표<br>" + response.schedule.toString().replaceAll(',', '<br>');
+                        $('.notion').html("{{ user.Grade }}학년 {{ user.Class }}반 시간표");
+                        $('.schedule').html(response.schedule.join('<br>'));
                     {% else %}
-                    document.getElementsByClassName('schedule')[0].innerHTML = "";
+                        $('.schedule').html('');
+                        $('.notion').html('');
                     {% endif %}
-                }});
+                }
+            });
         });
     </script>
-</body>
-</html>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}

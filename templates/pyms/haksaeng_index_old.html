@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if not user.is_authenticated %}
+        <a href="{% url 'login:login' %}">로그인</a>
+        <a href="{% url 'login:signup' %}">회원가입</a>
+    {% else %}
+        <a href="{% url 'login:logout' %}">{{ user.nickname }}({{ user.School }})(로그아웃)</a>
+    {% endif %}
+    <div>학생커뮤니티</div>
+    <table>
+        <tr>
+            <th class="school">로딩중...</th>
+        </tr>
+        <tr>
+            <th class="date">로딩중...</th>
+        </tr>
+        <tr>
+            <th class="menu">
+                로딩중...
+            </th>
+        </tr>
+    </table>
+    <table>
+        <tr><th class="notion">로딩중...</th></tr>
+        <tr>
+            <th class="schedule">로딩중...</th>
+        </tr>
+    </table>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'pyms:ajax_menu' %}",
+                data: {
+                    'school': '{{ user.School }}',
+                    'grade': '{{ user.Grade }}',
+                    'cls': '{{ user.Class }}'
+                },
+                headers: {
+                    'X-CSRFTOKEN': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    document.getElementsByClassName('school')[0].innerHTML = response.school
+                    document.getElementsByClassName('date')[0].innerHTML = response.date;
+                    document.getElementsByClassName('menu')[0].innerHTML = response.menu.toString().replaceAll(',', '<br>');
+                    console.log(response.schedule)
+                    schedules = document.getElementsByClassName('schedule')
+                    {% if user.is_authenticated %}
+                        document.getElementsByClassName('notion')[0].innerHTML = "{{ user.Grade }}학년 {{ user.Class }}반 시간표";
+                        schedules[0].innerHTML = response.schedule.toString().replaceAll(',', '<br>');
+                    {% else %}
+                    document.getElementsByClassName('schedule')[0].innerHTML = "";
+                    document.getElementsByClassName('notion')[0].innerHTML = "";
+                    {% endif %}
+                }});
+        });
+    </script>
+{% endblock %}
