@@ -11,7 +11,8 @@ def getGupsik(school):
 
 
 def getSchedule(school, grade, cls):
-    return requests.get(f'http://52.79.217.253:5000/schedule/{school}/{grade}/{cls}', verify=False).text
+    response = requests.get(f'http://52.79.217.253:5000/schedule/{school}/{grade}/{cls}', verify=False).text.split("<br>")
+    return response
 
 
 def shortschool(school_name):

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="question-details">
+    <h2>{{ question.subject }}</h2>
+    <h3>{{ question.School }} {{ question.Grade }}학년</h3>
+    <h4>{{ question.nickname }} {% if question.is_teacher %}선생님{% endif %}</h4>
+    <h5>{{ question.create_date }}</h5>
+
+    <div class="content">{{ question.content }}</div>
+    <div class="answers">
+        <form action="{% url 'pyms:answer_write' question.id %}" method="post" class="answer-form my-3">
+            {% csrf_token %}
+            <!-- 오류표시 Start -->
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <div>
+                        <strong>{{ field.label }}</strong>
+                        {{ field.errors }}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <!-- 오류표시 End -->
+            <h5 class="border-bottom my-3 py-2">{{question.answer_set.count}}개의 답변이 있습니다.</h5>
+            {% for answer in question.answer_set.all %}
+                <div class="answer" id="answer_{{ answer.id }}">
+                    <p>{{ answer.School }} {{ answer.Grade }}학년 {{ answer.nickname }}: {{ answer.content }}</p>
+                </div>
+            {% endfor %}
+            <div class="form-group">
+                <label for="content">답변내용</label>
+                <textarea name="content" id="content" class="form-control" rows="5"></textarea>
+            </div>
+            <input type="submit" value="답변등록" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+{% endblock %}

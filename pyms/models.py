@@ -13,8 +13,9 @@ class User(AbstractUser):
 
 
 class Question(models.Model):
-    School = models.CharField(max_length=100, default="", null=True)
+    School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
+    nickname = models.CharField(max_length=100)
     is_teacher = models.BooleanField(default=False)
     subject = models.CharField(max_length=200)
     content = models.TextField()
@@ -25,8 +26,10 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    School = models.CharField(max_length=100, default="", null=True)
+    id = models.AutoField(primary_key=True)
+    School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
+    nickname = models.CharField(max_length=100)
     is_teacher = models.BooleanField(default=False)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField()

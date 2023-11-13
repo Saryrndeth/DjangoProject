@@ -1,0 +1,39 @@
+.question-details {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h2, h3, h4, h5 {
+    margin-bottom: 10px;
+}
+
+.content {
+    margin-bottom: 20px;
+}
+
+.answers {
+    margin-top: 20px;
+}
+
+.answer {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.answer p {
+    margin: 0;
+}
+
+.answer-form {
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
