@@ -43,6 +43,7 @@ def question_write(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
+            question.user = request.user
             question.nickname = request.user.nickname
             question.School = request.user.School
             question.is_teacher = request.user.is_teacher

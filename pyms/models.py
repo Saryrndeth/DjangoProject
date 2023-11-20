@@ -13,6 +13,7 @@ class User(AbstractUser):
 
 
 class Question(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
     nickname = models.CharField(max_length=100)
@@ -26,6 +27,7 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     id = models.AutoField(primary_key=True)
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
