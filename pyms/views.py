@@ -7,12 +7,29 @@ from .forms import QuestionForm, AnswerForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.http import JsonResponse, HttpResponseNotAllowed
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
-    question_list = Question.objects.order_by('-create_date')
+    page = request.GET.get('page', '1')
+    kw = request.GET.get('kw', '')  # 검색어
+    private = request.GET.get('pri', '')
+    if private:
+        question_list = Question.objects.filter(private=private).order_by('-create_date')
+    else:
+        question_list = Question.objects.filter(private="전체").order_by('-create_date')
+    if kw:
+        question_list = question_list.filter(
+            Q(subject__icontains=kw) |  # 제목 검색
+            Q(content__icontains=kw) |  # 내용 검색
+            Q(answer__content__icontains=kw) # 답변 내용 검색
+        ).distinct()
+    paginator = Paginator(question_list, 10)
 
-    return render(request, 'pyms/haksaeng_index.html', {'question_list': question_list})
+    page_obj = paginator.get_page(page)
+    context = {'question_list': page_obj, 'page': page, 'kw': kw}
+    return render(request, 'pyms/haksaeng_index.html', context)
 
 
 def ajax_request_menu(request):
@@ -43,6 +60,8 @@ def question_write(request):
         form = QuestionForm(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
+            if request.POST.get('private') == '학교':
+                question.private = request.user.School
             question.user = request.user
             question.nickname = request.user.nickname
             question.School = request.user.School
@@ -64,7 +83,7 @@ def answer_write(request, question_id):
         form = AnswerForm(request.POST)
         if form.is_valid():
             print(question)
-            question.answer_set.create(content=request.POST.get('content'), create_date=timezone.now(), nickname=request.user.nickname, School=request.user.School, is_teacher=request.user.is_teacher, Grade=request.user.Grade)
+            question.answer_set.create(user=request.user, content=request.POST.get('content'), create_date=timezone.now(), nickname=request.user.nickname, School=request.user.School, is_teacher=request.user.is_teacher, Grade=request.user.Grade)
             return redirect('pyms:question_detail', question_id=question.id)
     else:
         return HttpResponseNotAllowed("POST 요청이 아닙니다.")

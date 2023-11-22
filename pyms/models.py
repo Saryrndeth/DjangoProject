@@ -20,6 +20,7 @@ class Question(models.Model):
     is_teacher = models.BooleanField(default=False)
     subject = models.CharField(max_length=200)
     content = models.TextField()
+    private = models.CharField(max_length=100, default="", null=True)
     create_date = models.DateTimeField()
 
     def __str__(self):
@@ -28,7 +29,6 @@ class Question(models.Model):
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    id = models.AutoField(primary_key=True)
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
     nickname = models.CharField(max_length=100)

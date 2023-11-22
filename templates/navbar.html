@@ -2,11 +2,11 @@
 
 <!-- 화면 위쪽에 고정하기 위해 fixed-top 클래스 추가 -->
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" style="height: 8%; background-color: deepskyblue;">
+<nav class="navbar navbar-success navbar-expand-md fixed-top" style="height: 8%; background-color: #99CCFF;">
 
   <!-- navbar-brand의 content 변경 -->
 
-  <a class="navbar-brand" href="#">Fixed navbar</a>
+  <a class="navbar-brand" href="{% url 'pyms:index' %}">학생커뮤니티</a>
 
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 
@@ -20,31 +20,27 @@
 
       <li class="nav-item active">
 
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{% url 'pyms:index' %}">홈</a>
 
       </li>
-
-      <li class="nav-item">
-
-        <a class="nav-link" href="#">Link</a>
-
-      </li>
-
-      <!-- dropdown 메뉴 삭제 -->
-
-      <li class="nav-item">
-
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-
-      </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item active">
+            <a class="nav-link" href="#" id="private">{{ user.School }}</a>
+        </li>
+        {% endif %}
 
     </ul>
 
     <form class="form-inline my-2 my-lg-0">
 
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <div class="col-6" >
+            <div class="input-group">
+                <input type="text" id="search_kw" class="form-control" value="{{ kw|default_if_none:'' }}">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+                </div>
+            </div>
+        </div>
 
     </form>
 

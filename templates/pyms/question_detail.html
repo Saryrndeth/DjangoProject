@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="question-details">
+<div class="question-details" style="position: relative; top: 100px;">
     <h2>{{ question.subject }}</h2>
     <h3>{{ question.School }} {{ question.Grade }}학년</h3>
     <h4>{{ question.nickname }} {% if question.is_teacher %}선생님{% endif %}</h4>

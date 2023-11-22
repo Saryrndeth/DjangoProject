@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load filter %}
     <div class="container">
-        <div class="side-bar" style="position: absolute; float: right; right: 80px; width: 250px; top: 70px;">
+        <div class="side-bar" style="position: absolute; float: right; right: 80px; width: 250px; top: 90px;">
             <div class="user-actions">
                 {% if not user.is_authenticated %}
                     <a href="{% url 'login:login' %}">로그인</a>
@@ -35,8 +36,10 @@
             </div>
         </div>
 
-        <div><a class="question_write" href="{% url 'pyms:question_write' %}" style="position: absolute;width: 8%; top: 45px; font-size: 80%; padding: 5px;">질문 등록하기</a></div>
-        <div class="main-content" style="position: absolute;top: 100px; padding: 0%;">
+        <div><a class="question_write" href="{% url 'pyms:question_write' %}" style="position: relative;width: 100%; top: 70px; font-size: 80%; padding: 5px;">질문 등록하기</a>
+
+        </div>
+        <div class="main-content" style="position: absolute;top: 150px; padding: 0%;">
             {% if question_list %}
                 <table style="width: 75%;">
                     <colgroup>
@@ -55,8 +58,15 @@
                     </tr>
                     {% for question in question_list %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url 'pyms:question_detail' question.id %}">{{ question.subject }}</a></td>
+                            <td>
+                                <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
+                                {{ question_list.paginator.count|sub:question_list.start_index|sub:forloop.counter0|add:1 }}
+                            </td>
+                            <td><a href="{% url 'pyms:question_detail' question.id %}">{{ question.subject }}</a>
+                                {% if question.answer_set.count > 0 %}
+                                <span class="text-danger small mx-2">{{ question.answer_set.count }}</span>
+                                {% endif %}
+                            </td>
                             <td>{{ question.nickname }}</td>
                             <td>{{ question.create_date }}</td>
                             <td>{{ question.user.School}}</td>
@@ -66,6 +76,48 @@
             {% else %}
                 <p>질문이 없습니다.</p>
             {% endif %}
+            <!-- 페이징처리 시작 -->
+            <ul class="pagination justify-content-center" >
+                <!-- 이전페이지 -->
+                {% if question_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" data-page="{{ question_list.previous_page_number }}"
+               href="javascript:void(0)">이전</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                </li>
+                {% endif %}
+                <!-- 페이지리스트 -->
+                {% for page_number in question_list.paginator.page_range %}
+                {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                {% if page_number == question_list.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" data-page="{{ page_number }}"
+               href="javascript:void(0)">{{ page_number }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" data-page="{{ page_number }}"
+               href="javascript:void(0)">{{ page_number }}</a>
+                </li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                <!-- 다음페이지 -->
+                {% if question_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" data-page="{{ question_list.next_page_number }}"
+               href="javascript:void(0)">다음</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                </li>
+                {% endif %}
+            </ul>
+            <!-- 페이징처리 끝 -->
         </div>
     </div>
 
@@ -110,4 +162,34 @@
     </style>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <form id="searchForm" method="get" action="{% url 'pyms:index' %}">
+    <input type="hidden" id="kw" name="kw" value="{{ kw|default_if_none:'' }}">
+    <input type="hidden" id="page" name="page" value="{{ page }}">
+    <input type="hidden" id="pri" name="pri" value="{{ pri|default_if_none:'' }}">
+    </form>
+    <script type='text/javascript'>
+    const page_elements = document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function(element) {
+        element.addEventListener('click', function() {
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById('searchForm').submit();
+        });
+    });
+    const pri = document.getElementById("private");
+    pri.addEventListener('click', function() {
+        console.log(1);
+        document.getElementById('pri').value = "{{ user.School }}";
+        document.getElementById('searchForm').submit();
+    });
+    const btn_search = document.getElementById("btn_search");
+    console.log(btn_search);
+    btn_search.addEventListener('click', function() {
+        document.getElementById('kw').value = document.getElementById('search_kw').value;
+        document.getElementById('page').value = 1;  // 검색버튼을 클릭할 경우 1페이지부터 조회한다.
+        document.getElementById('searchForm').submit();
+    });
+</script>
+{% endblock %}
+{% block script %}
+
 {% endblock %}
