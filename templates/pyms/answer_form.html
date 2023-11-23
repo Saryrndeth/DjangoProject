@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- 답변 수정-->
+<div class="container my-3" style=" position: relative; top: 50px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% include "form_errors.html" %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">저장하기</button>
+    </form>
+</div>
+{% endblock %}

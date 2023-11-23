@@ -36,7 +36,8 @@
             </div>
         </div>
 
-        <div><a class="question_write" href="{% url 'pyms:question_write' %}" style="position: relative;width: 100%; top: 70px; font-size: 80%; padding: 5px;">질문 등록하기</a>
+        <div><a class="question_write" href="{% url 'pyms:question_write' %}" style="position: relative;width: 100%; top: 70px; font-size: 80%; padding: 5px;">질문 등록하기</a><br>
+        <div style="position: relative; top:65px; font-weight: bold; color: dodgerblue;">{{ private }} 게시판</div>
 
         </div>
         <div class="main-content" style="position: absolute;top: 150px; padding: 0%;">
@@ -50,11 +51,11 @@
                         <col style="width:15%">
                     </colgroup>
                     <tr>
-                        <th style="border:none;">번호</th>
-                        <th style="border:none;">제목</th>
-                        <th style="border:none;">작성자</th>
-                        <th style="border:none;">작성일</th>
-                        <th style="border:none;">학교</th>
+                        <th style="border:none; text-align: center;">번호</th>
+                        <th style="border:none; text-align: center;">제목</th>
+                        <th style="border:none; text-align: center;">작성자</th>
+                        <th style="border:none; text-align: center;">작성일</th>
+                        <th style="border:none; text-align: center;">학교</th>
                     </tr>
                     {% for question in question_list %}
                         <tr>

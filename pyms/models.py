@@ -13,7 +13,7 @@ class User(AbstractUser):
 
 
 class Question(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author_question')
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
     nickname = models.CharField(max_length=100)
@@ -22,13 +22,16 @@ class Question(models.Model):
     content = models.TextField()
     private = models.CharField(max_length=100, default="", null=True)
     create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_question')
+    imgfile = models.ImageField(null=True, upload_to="", blank=True)
 
     def __str__(self):
         return f"{self.id}, {self.subject}, {self.content}"
 
 
 class Answer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE , related_name='author_answer')
     School = models.CharField(max_length=100)
     Grade = models.IntegerField(default=0)
     nickname = models.CharField(max_length=100)
@@ -36,6 +39,9 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField()
     create_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+    voter = models.ManyToManyField(User, related_name='voter_answer')
+    imgfile = models.ImageField(null=True, upload_to="", blank=True)
 
 
 class RegisteredSchool(models.Model):
